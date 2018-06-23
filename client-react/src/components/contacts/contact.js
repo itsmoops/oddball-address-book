@@ -14,7 +14,13 @@ const P = styled.p`
   -webkit-margin-after: 0.5em;
 `;
 
-const Input = styled.input``;
+const Input = styled.input`
+  height: 20px;
+  border-radius: 5px;
+  padding-left: 5px;
+  display: block;
+  margin-bottom: 5px;
+`;
 
 const LetterIcon = styled.div`
   display: inline-block;
@@ -39,7 +45,7 @@ const EditPane = styled.div`
   display: ${props => (props.menuOpen ? "block" : "none")};
   margin-top: 5px;
   border-top: 1px solid #a5a5a5;
-  height: 250px;
+  height: 280px;
   padding: 20px;
 `;
 
@@ -55,6 +61,7 @@ class Contact extends React.PureComponent {
     this.state = defaultState;
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
   handleInputChange(e) {
     const field = e.target.name;
@@ -76,9 +83,24 @@ class Contact extends React.PureComponent {
     })
       .then(resp => resp.json())
       .then(data => {
-        this.props.contactSaved();
+        this.props.contactsUpdated();
         this.setState(defaultState);
       });
+  }
+  handleDelete() {
+    if (window.confirm("Are you sure you want to delete this contact?")) {
+      fetch(`api/delete/${this.props.contact.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(resp => resp.json())
+        .then(data => {
+          this.props.contactsUpdated();
+          this.setState(defaultState);
+        });
+    }
   }
   render() {
     const { contact } = this.props;
@@ -150,6 +172,7 @@ class Contact extends React.PureComponent {
         >
           Save
         </Button>
+        <Button onClick={this.handleDelete}>Delete</Button>
       </div>
     );
     return (
