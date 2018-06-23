@@ -27,6 +27,7 @@ class App extends Component {
 
     window.onscroll = () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        // handle infinite scroll
         this.fetchMore();
       }
     };
