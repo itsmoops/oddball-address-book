@@ -1,46 +1,45 @@
-import React, { Component, Fragment } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import Search from "./components/common/search";
+import ContactList from "./components/contacts/contact-list";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      contacts: []
+    };
+
+    this.contactSaved = this.contactSaved.bind(this);
+  }
   componentDidMount() {
-    fetch('api/oddballs').then(resp => resp.json()).then(data => {
-      console.log(data)
-    })
+    fetch("api/oddballs")
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({
+          contacts: data
+        });
+      });
+  }
+  contactSaved() {
+    fetch("api/oddballs")
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({
+          contacts: data
+        });
+      });
   }
   render() {
     return (
       <div className="App">
-          <input
-            type="text"
-            name="search"
-          />
-          <ContactList />
+        <div className="container">
+          <Search />
+          <ContactList contacts={this.state.contacts} contactSaved={this.contactSaved} />
+        </div>
       </div>
     );
   }
 }
-
-class ContactList extends Component {
-  render(){
-    return [
-      <Contact />,
-      <Contact />,
-      <Contact />,
-      <Contact />
-    ]
-  }
-
-}
-
-class Contact extends Component {
-  render() {
-    return(
-      <p>Contact</p>
-    )
-  }
-}
-
-
 
 export default App;
