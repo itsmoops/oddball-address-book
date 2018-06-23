@@ -11,6 +11,7 @@ class App extends Component {
     };
 
     this.contactSaved = this.contactSaved.bind(this);
+    this.search = this.search.bind(this);
   }
   componentDidMount() {
     fetch("api/oddballs")
@@ -30,11 +31,20 @@ class App extends Component {
         });
       });
   }
+  search(searchTerm) {
+    fetch(`api/search?q=${searchTerm}`)
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({
+          contacts: data
+        });
+      });
+  }
   render() {
     return (
       <div className="App">
         <div className="container">
-          <Search />
+          <Search search={this.search} />
           <ContactList contacts={this.state.contacts} contactSaved={this.contactSaved} />
         </div>
       </div>
